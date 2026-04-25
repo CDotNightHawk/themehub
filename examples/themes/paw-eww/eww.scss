@@ -1,0 +1,11 @@
+$bg: #1a1720; $fg: #f5e9f5; $accent: #ff4fb2;
+.paw {
+  background: rgba(26,23,32,0.9);
+  color: $fg;
+  border-radius: 14px;
+  padding: 18px;
+  border: 2px solid $accent;
+}
+.mascot { font-size: 18px; color: $accent; margin-bottom: 8px; }
+.clock  { font-size: 32px; font-weight: bold; margin: 8px 0; }
+.mod    { font-size: 13px; color: #c792ea; }

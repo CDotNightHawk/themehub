@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Discord"
+slug = "paw-discord"
+type = "discord"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Vencord/BetterDiscord CSS: paw-magenta accents, rounded server pills, dark base."
+authors = ["NightHawk"]
+tags = ["furry", "discord", "vencord", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/Vencord/themes/paw-discord"
+entrypoint = "paw.theme.css"

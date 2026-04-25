@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Polybar"
+slug = "paw-polybar"
+type = "polybar"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Polybar 'main' bar with paw-purple accent, rounded modules, and a custom paw glyph."
+authors = ["NightHawk"]
+tags = ["furry", "polybar", "bar", "x11"]
+nsfw = false
+
+[install]
+target = "{home}/.config/polybar/themes/paw-polybar"
+entrypoint = "config.ini"

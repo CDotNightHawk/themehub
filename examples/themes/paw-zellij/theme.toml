@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Zellij"
+slug = "paw-zellij"
+type = "zellij"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Zellij multiplexer theme with paw-magenta pane focus and pastel tab bar."
+authors = ["NightHawk"]
+tags = ["furry", "zellij", "terminal", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/zellij/themes/paw-zellij"
+entrypoint = "paw.kdl"

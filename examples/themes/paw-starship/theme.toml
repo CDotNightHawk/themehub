@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Starship"
+slug = "paw-starship"
+type = "starship"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Two-line starship prompt: magenta paw glyph, cwd, git branch + status, clean right prompt."
+authors = ["NightHawk"]
+tags = ["furry", "starship", "prompt", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/starship/themes/paw-starship"
+entrypoint = "starship.toml"

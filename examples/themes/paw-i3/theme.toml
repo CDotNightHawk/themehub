@@ -1,0 +1,14 @@
+[theme]
+name = "Paw i3"
+slug = "paw-i3"
+type = "i3"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "i3 colour scheme + bar include. Paw-magenta focus, soft-muted inactive, gaps tuned for polybar."
+authors = ["NightHawk"]
+tags = ["furry", "i3", "wm", "x11"]
+nsfw = false
+
+[install]
+target = "{home}/.config/i3/themes/paw-i3"
+entrypoint = "config"

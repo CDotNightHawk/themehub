@@ -1,0 +1,15 @@
+themes {
+  paw {
+    fg "#f5e9f5"
+    bg "#1a1720"
+    black "#2a2530"
+    red "#ff6b8a"
+    green "#8aff7a"
+    yellow "#ffcb6b"
+    blue "#82aaff"
+    magenta "#ff4fb2"
+    cyan "#89ddff"
+    white "#cfc5e0"
+    orange "#ffcb6b"
+  }
+}

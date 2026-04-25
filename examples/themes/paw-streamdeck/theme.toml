@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Stream Deck"
+slug = "paw-streamdeck"
+type = "streamdeck"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "15-key Stream Deck icon pack: paw glyphs, desktop shortcuts, and a mascot key."
+authors = ["NightHawk"]
+tags = ["furry", "streamdeck", "icons", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/Pictures/StreamDeck/paw-streamdeck"
+entrypoint = "icons"

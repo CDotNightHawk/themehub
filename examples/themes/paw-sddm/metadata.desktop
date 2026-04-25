@@ -1,0 +1,12 @@
+[SddmGreeterTheme]
+Name=Paw
+Description=Dark paw-magenta greeter.
+Author=NightHawk
+Copyright=NightHawk
+License=CC-BY-SA-4.0
+Type=sddm-theme
+Version=1.0.0
+Website=https://github.com/CDotNightHawk/themehub
+Screenshot=screenshot.png
+MainScript=Main.qml
+ConfigFile=theme.conf

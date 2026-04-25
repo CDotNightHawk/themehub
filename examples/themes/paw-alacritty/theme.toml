@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Alacritty"
+slug = "paw-alacritty"
+type = "alacritty"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Alacritty dark theme with paw-purple cursor and neon magenta accents."
+authors = ["NightHawk"]
+tags = ["furry", "alacritty", "terminal", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/alacritty/themes/paw-alacritty"
+entrypoint = "paw.toml"

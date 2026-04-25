@@ -1,0 +1,15 @@
+[theme]
+name = "Paw Keycap"
+slug = "paw-keycap"
+type = "keycap"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Print-ready keycap legend set: paw glyph, wasd highlights, neon magenta accents."
+authors = ["NightHawk"]
+tags = ["furry", "keycap", "mech", "physical"]
+nsfw = false
+screenshots = ["keys/wasd.svg"]
+
+[install]
+target = "{home}/Pictures/Keycaps/paw-keycap"
+entrypoint = "keys"

@@ -1,0 +1,14 @@
+[theme]
+name = "Paw WezTerm"
+slug = "paw-wezterm"
+type = "wezterm"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "WezTerm Lua colour scheme with paw-purple cursor and neon accents."
+authors = ["NightHawk"]
+tags = ["furry", "wezterm", "terminal", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/wezterm/themes/paw-wezterm"
+entrypoint = "paw.lua"

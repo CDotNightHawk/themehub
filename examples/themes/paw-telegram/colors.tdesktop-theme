@@ -1,0 +1,7 @@
+windowBg: #1a1720;
+windowFg: #f5e9f5;
+windowBgActive: #ff4fb2;
+msgOutBg: #ff4fb2;
+msgOutBgSelected: #b24dff;
+msgInBg: #2a2530;
+msgInBgSelected: #3a2f46;

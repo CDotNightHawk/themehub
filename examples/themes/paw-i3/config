@@ -1,0 +1,16 @@
+# Paw i3 colours — include from ~/.config/i3/config
+set $bg      #1a1720
+set $fg      #f5e9f5
+set $accent  #ff4fb2
+set $accent2 #b24dff
+set $muted   #5b4d66
+
+# class                 border   bg       text  indicator child_border
+client.focused          $accent  $bg      $fg   $accent2  $accent
+client.focused_inactive $muted   $bg      $fg   $muted    $muted
+client.unfocused        $muted   $bg      $fg   $muted    $muted
+client.urgent           #ff6b8a  $bg      $fg   #ff6b8a   #ff6b8a
+
+gaps inner 6
+gaps outer 2
+default_border pixel 2

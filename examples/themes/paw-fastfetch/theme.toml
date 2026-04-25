@@ -1,0 +1,14 @@
+[theme]
+name = "Paw fastfetch"
+slug = "paw-fastfetch"
+type = "fastfetch"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "fastfetch config with custom paw ASCII logo and colour-key-value layout."
+authors = ["NightHawk"]
+tags = ["furry", "fastfetch", "cli", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/fastfetch/paw-fastfetch"
+entrypoint = "config.jsonc"

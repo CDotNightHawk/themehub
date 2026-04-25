@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Neovim"
+slug = "paw-neovim"
+type = "neovim"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Paw Neovim colourscheme (vim9/lua). Dark background, magenta highlights, pastel syntax."
+authors = ["NightHawk"]
+tags = ["furry", "neovim", "colorscheme", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/nvim/colors/paw-neovim"
+entrypoint = "paw.vim"

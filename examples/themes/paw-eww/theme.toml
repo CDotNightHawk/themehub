@@ -1,0 +1,14 @@
+[theme]
+name = "Paw EWW"
+slug = "paw-eww"
+type = "eww"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Tiny EWW sidebar widget: clock, CPU, battery, paw mascot header. Dark with magenta accent."
+authors = ["NightHawk"]
+tags = ["furry", "eww", "widget", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/eww/themes/paw-eww"
+entrypoint = "eww.yuck"

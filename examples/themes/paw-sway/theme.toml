@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Sway"
+slug = "paw-sway"
+type = "sway"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Moody dark Sway config with magenta accents, smart gaps, and a paw-palette bar scheme."
+authors = ["NightHawk"]
+tags = ["furry", "sway", "dark", "wayland", "ricing"]
+nsfw = false
+
+[install]
+target = "{home}/.config/sway/themes/paw-sway"
+entrypoint = "config"

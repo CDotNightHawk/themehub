@@ -1,0 +1,16 @@
+# Paw Sway — include at end of ~/.config/sway/config
+set $bg      #1a1720
+set $fg      #f5e9f5
+set $accent  #ff4fb2
+set $accent2 #b24dff
+set $muted   #5b4d66
+
+# class                 border  bg      text  indicator child_border
+client.focused          $accent $bg     $fg   $accent2  $accent
+client.focused_inactive $muted  $bg     $fg   $muted    $muted
+client.unfocused        $muted  $bg     $fg   $muted    $muted
+
+gaps inner 8
+gaps outer 4
+default_border pixel 2
+smart_borders on

@@ -1,0 +1,12 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 32,
+  "spacing": 6,
+  "modules-left":   ["hyprland/workspaces", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right":  ["pulseaudio", "network", "cpu", "memory", "battery", "tray"],
+  "hyprland/workspaces": { "format": "{icon}", "on-click": "activate",
+    "format-icons": { "1":"🐾","2":"✦","3":"✧","4":"⚙","5":"♪","default":"·" } },
+  "clock": { "format": "{:%a %d  %H:%M}" }
+}
