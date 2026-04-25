@@ -1,0 +1,13 @@
+[theme]
+name = "Ventoy Paws"
+slug = "ventoy-paws"
+type = "ventoy"
+version = "0.2.0"
+license = "MIT"
+description = "Ventoy theme with subtle paw-print backdrop and a high-contrast menu."
+authors = ["NightHawk"]
+tags = ["furry", "ventoy", "minimal"]
+
+[install]
+target = "{home}/ventoy/themes/ventoy-paws"
+entrypoint = "theme.txt"

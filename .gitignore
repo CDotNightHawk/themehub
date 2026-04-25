@@ -1,0 +1,28 @@
+# node
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# rust
+target/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# storage
+storage/
+uploads/
+data/
+
+# misc
+.DS_Store
+*.log
+.idea/
+.vscode/
+result
+result-*

@@ -1,0 +1,16 @@
+[theme]
+name = "Furry GRUB Dark"
+slug = "furry-grub-dark"
+type = "grub"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "A dark, paw-print accented GRUB theme. Perfect for furry IT folks who like a moody bootloader."
+authors = ["NightHawk"]
+tags = ["furry", "dark", "neon", "grub"]
+nsfw = false
+homepage = "https://github.com/CDotNightHawk/themehub"
+repository = "https://github.com/CDotNightHawk/themehub"
+
+[install]
+target = "/boot/grub/themes/furry-grub-dark"
+entrypoint = "theme.txt"
