@@ -609,6 +609,8 @@ export async function listPhotos(f: PhotosFilter = {}): Promise<PhotoCard[]> {
   const conds = [] as ReturnType<typeof eq>[];
   if (f.type) conds.push(eq(themes.type, f.type));
   if (!f.includeNsfw) conds.push(eq(themes.nsfw, false));
+  // Moderator-hidden themes must not leak their screenshots here either.
+  conds.push(eq(themes.hidden, false));
 
   let themeIdsForTag: string[] | null = null;
   if (f.tag) {

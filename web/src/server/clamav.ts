@@ -115,9 +115,9 @@ export async function scanBuffer(buf: Buffer): Promise<ScanResult> {
       //   "stream: Eicar-Test-Signature FOUND"
       //   "stream: ... ERROR"
       const engine = "ClamAV";
-      if (/\bOK\b/.test(raw)) {
-        return finish({ verdict: "clean", engine });
-      }
+      // IMPORTANT: check FOUND first. Signature names can contain the substring
+      // "OK" (e.g. "PUA.DOC.OK.Agent-1234"), and `\bOK\b` would otherwise match
+      // inside the signature and mis-classify an infected archive as clean.
       const found = raw.match(/stream:\s*(.+?)\s+FOUND/i);
       if (found) {
         return finish({
@@ -125,6 +125,9 @@ export async function scanBuffer(buf: Buffer): Promise<ScanResult> {
           engine,
           signature: found[1].trim(),
         });
+      }
+      if (/\bOK\b/.test(raw)) {
+        return finish({ verdict: "clean", engine });
       }
       finish({ verdict: "error", reason: raw || "empty reply" });
     });
