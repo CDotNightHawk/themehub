@@ -70,12 +70,12 @@ export default async function ThemePage({
               <span className="text-[color:var(--muted)]">
                 {formatNumber(detail.theme.downloads)} downloads
               </span>
-              <Link
+              <a
                 href={`/api/themes/${detail.theme.slug}/download`}
                 className="rounded-lg bg-[color:var(--accent)] px-4 py-2 text-sm font-medium text-[color:var(--accent-foreground)]"
               >
                 Download archive
-              </Link>
+              </a>
             </div>
           </header>
 
@@ -135,12 +135,12 @@ export default async function ThemePage({
                   <span className="text-[color:var(--muted)]">
                     {timeAgo(v.createdAt)} · {formatBytes(v.archiveSize)}
                   </span>
-                  <Link
+                  <a
                     href={`/api/themes/${detail.theme.slug}/download?v=${v.version}`}
                     className="text-[color:var(--accent)] hover:underline"
                   >
                     download
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>

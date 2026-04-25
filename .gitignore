@@ -26,3 +26,7 @@ data/
 .vscode/
 result
 result-*
+
+# test artifacts (not tracked)
+test-plan.md
+test-report.md

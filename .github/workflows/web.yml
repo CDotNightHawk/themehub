@@ -1,0 +1,45 @@
+name: web
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - ".github/workflows/web.yml"
+  pull_request:
+    paths:
+      - "web/**"
+      - ".github/workflows/web.yml"
+
+jobs:
+  lint-typecheck-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+        env:
+          # Build-time placeholders; the app reads these at runtime, but
+          # Next.js bails on missing public envs during `next build`.
+          DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+          AUTH_SECRET: ci-placeholder-secret-ci-placeholder-secret
+          PUBLIC_URL: http://localhost:3000
+          AUTH_URL: http://localhost:3000
+          STORAGE_DRIVER: local
+          STORAGE_LOCAL_DIR: ./storage

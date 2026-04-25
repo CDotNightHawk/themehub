@@ -25,9 +25,38 @@ services:
       MINIO_ROOT_PASSWORD: themehubthemehub
     volumes:
       - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     ports:
       - "9000:9000"
       - "9001:9001"
+
+  # One-shot: create the S3 bucket the web app writes archives to.
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 themehub themehubthemehub &&
+      mc mb -p local/themehub || true &&
+      mc anonymous set download local/themehub"
+    restart: "no"
+
+  # One-shot: push the Drizzle schema to Postgres.
+  migrate:
+    build: ./web
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://themehub:themehub@postgres:5432/themehub
+    command: ["npx", "drizzle-kit", "push", "--force", "--config", "./drizzle.config.ts"]
+    restart: "no"
 
   web:
     build: ./web
@@ -35,6 +64,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      minio-init:
+        condition: service_completed_successfully
     environment:
       DATABASE_URL: postgres://themehub:themehub@postgres:5432/themehub
       AUTH_SECRET: ${AUTH_SECRET:-please-change-me-please-change-me-please-change}
@@ -51,6 +84,8 @@ services:
       SITE_TAGLINE: ${SITE_TAGLINE:-Theme everything.}
       ADMIN_USERS: ${ADMIN_USERS:-}
       ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
     ports:
       - "3000:3000"
 
