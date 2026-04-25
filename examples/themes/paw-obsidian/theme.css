@@ -1,0 +1,11 @@
+.theme-dark {
+  --background-primary: #1a1720;
+  --background-secondary: #16131a;
+  --text-normal: #f5e9f5;
+  --text-accent: #ff4fb2;
+  --interactive-accent: #ff4fb2;
+  --graph-line: #b24dff;
+  --graph-node: #ff4fb2;
+  --graph-text: #f5e9f5;
+}
+.markdown-preview-view a { color: var(--text-accent); }

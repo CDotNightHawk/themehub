@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Kitty"
+slug = "paw-kitty"
+type = "kitty"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "A dark kitty terminal theme with paw-purple accents and soft pastel ANSI colours."
+authors = ["NightHawk"]
+tags = ["furry", "kitty", "terminal", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/kitty/themes/paw-kitty"
+entrypoint = "paw-kitty.conf"

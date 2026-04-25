@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Ghostty"
+slug = "paw-ghostty"
+type = "ghostty"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Ghostty terminal colour scheme with paw-magenta cursor and pastel ANSI palette."
+authors = ["NightHawk"]
+tags = ["furry", "ghostty", "terminal", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/ghostty/themes/paw-ghostty"
+entrypoint = "paw"

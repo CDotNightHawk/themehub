@@ -6,7 +6,8 @@ import {
 } from "@/server/themes";
 import { Badge, Card, Stars } from "@/components/ui";
 import { Markdown } from "@/components/markdown";
-import { StorageImage } from "@/components/storage-image";
+import { ScreenshotGallery } from "@/components/screenshot-gallery";
+import { ThemePreview } from "@/components/theme-preview";
 import { getCategory } from "@/lib/categories";
 import { auth } from "@/lib/auth";
 import { CommentForm } from "./comment-form";
@@ -79,21 +80,17 @@ export default async function ThemePage({
             </div>
           </header>
 
-          {detail.screenshots.length > 0 && (
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {detail.screenshots.map((s) => (
-                <Card
-                  key={s.id}
-                  className="overflow-hidden"
-                >
-                  <StorageImage
-                    storageKey={s.storageKey}
-                    alt={detail.theme.name}
-                    className="aspect-[16/9] w-full object-cover"
-                  />
-                </Card>
-              ))}
-            </div>
+          <ScreenshotGallery
+            screenshots={detail.screenshots}
+            alt={detail.theme.name}
+          />
+
+          {detail.latestVersion && (
+            <ThemePreview
+              slug={detail.theme.slug}
+              themeType={detail.theme.type}
+              themeName={detail.theme.name}
+            />
           )}
 
           <Card className="mt-6 p-5">

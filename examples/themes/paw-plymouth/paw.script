@@ -1,0 +1,11 @@
+# Minimal plymouth script: cycle through frames.
+frames = 8;
+i = 0;
+fun refresh_callback () {
+  i = (i + 1) % frames;
+  img = Image.Load("frame-" + String.FormatDecimal(i + 1, 3) + ".png");
+  sprite = Sprite(img);
+  sprite.SetPosition(Window.GetWidth() / 2 - img.GetWidth() / 2,
+                     Window.GetHeight() / 2 - img.GetHeight() / 2, 0);
+}
+Plymouth.SetRefreshFunction(refresh_callback);

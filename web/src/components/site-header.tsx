@@ -28,6 +28,7 @@ export function SiteHeader({ user }: { user: HeaderUser | null }) {
         </Link>
         <nav className="hidden items-center gap-1 text-sm sm:flex">
           <NavLink href="/themes">Browse</NavLink>
+          <NavLink href="/photos">Photos</NavLink>
           <NavLink href="/categories">Categories</NavLink>
           <NavLink href="/collections">Collections</NavLink>
           <NavLink href="/docs">Docs</NavLink>

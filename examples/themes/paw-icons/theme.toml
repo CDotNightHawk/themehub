@@ -1,0 +1,15 @@
+[theme]
+name = "Paw Icons"
+slug = "paw-icons"
+type = "icon"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "A tiny paw-themed icon pack: browsers, terminal, file manager, music, chat. Dark magenta."
+authors = ["NightHawk"]
+tags = ["furry", "icons", "dark"]
+nsfw = false
+screenshots = ["icons/terminal.svg"]
+
+[install]
+target = "{home}/.icons/paw-icons"
+entrypoint = "index.theme"

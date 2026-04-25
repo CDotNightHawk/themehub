@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" width="480" height="320">
+  <rect width="480" height="320" fill="#1a1720"/>
+  <text x="16" y="40" fill="#ff4fb2" font-family="monospace" font-size="28" font-weight="bold">🐾 PAW</text>
+  <rect x="16" y="64"  width="220" height="20" rx="6" fill="#2a2530"/>
+  <rect x="16" y="64"  width="170" height="20" rx="6" fill="#ff4fb2"/>
+  <rect x="16" y="96"  width="220" height="20" rx="6" fill="#2a2530"/>
+  <rect x="16" y="96"  width="120" height="20" rx="6" fill="#b24dff"/>
+  <rect x="16" y="128" width="220" height="20" rx="6" fill="#2a2530"/>
+  <rect x="16" y="128" width="95"  height="20" rx="6" fill="#82aaff"/>
+  <text x="260" y="110" fill="#f5e9f5" font-family="monospace" font-size="48" font-weight="bold">21:37</text>
+  <text x="16"  y="300" fill="#5b4d66" font-family="monospace" font-size="12">cpu · ram · gpu</text>
+</svg>

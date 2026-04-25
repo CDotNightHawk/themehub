@@ -1,0 +1,25 @@
+{
+  "name": "Paw Midnight",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#1a1720",
+    "editor.foreground": "#f5e9f5",
+    "editorCursor.foreground": "#ff4fb2",
+    "editor.selectionBackground": "#3a2f46",
+    "activityBar.background": "#16131a",
+    "statusBar.background": "#2a2530",
+    "statusBar.foreground": "#ff4fb2",
+    "sideBar.background": "#16131a",
+    "tab.activeBackground": "#1a1720",
+    "tab.activeBorder": "#ff4fb2",
+    "focusBorder": "#ff4fb2"
+  },
+  "tokenColors": [
+    { "scope": "comment", "settings": { "foreground": "#6e5e78", "fontStyle": "italic" } },
+    { "scope": "keyword", "settings": { "foreground": "#ff4fb2" } },
+    { "scope": "string",  "settings": { "foreground": "#8aff7a" } },
+    { "scope": "entity.name.function", "settings": { "foreground": "#c792ea" } },
+    { "scope": "variable","settings": { "foreground": "#e5b5ff" } },
+    { "scope": "constant.numeric","settings": { "foreground": "#ffcb6b" } }
+  ]
+}

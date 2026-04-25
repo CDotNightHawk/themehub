@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Helix"
+slug = "paw-helix"
+type = "helix"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Helix editor theme. Paw-magenta cursor line, pastel syntax, dark bg."
+authors = ["NightHawk"]
+tags = ["furry", "helix", "editor", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/helix/themes/paw-helix"
+entrypoint = "paw.toml"

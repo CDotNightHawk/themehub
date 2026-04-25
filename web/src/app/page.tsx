@@ -94,7 +94,12 @@ export default async function HomePage() {
                     href={`/categories/${c.type}`}
                     className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-black/5 dark:hover:bg-white/5"
                   >
-                    <span>{c.label}</span>
+                    <span>
+                      <span className="mr-2" aria-hidden>
+                        {c.icon}
+                      </span>
+                      {c.label}
+                    </span>
                     <span className="text-xs text-[color:var(--muted)]">
                       {c.type}
                     </span>

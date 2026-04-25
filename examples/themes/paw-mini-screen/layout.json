@@ -1,0 +1,11 @@
+{
+  "width": 480, "height": 320,
+  "background": "#1a1720",
+  "widgets": [
+    { "type": "text", "x": 16, "y": 12, "font": 28, "color": "#ff4fb2", "text": "🐾 PAW" },
+    { "type": "gauge", "metric": "cpu", "x": 16, "y": 64, "w": 220, "h": 20, "color": "#ff4fb2" },
+    { "type": "gauge", "metric": "ram", "x": 16, "y": 96, "w": 220, "h": 20, "color": "#b24dff" },
+    { "type": "gauge", "metric": "gpu", "x": 16, "y": 128, "w": 220, "h": 20, "color": "#82aaff" },
+    { "type": "clock", "x": 260, "y": 64, "w": 200, "h": 80, "color": "#f5e9f5" }
+  ]
+}

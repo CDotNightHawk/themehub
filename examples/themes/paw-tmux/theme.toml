@@ -1,0 +1,14 @@
+[theme]
+name = "Paw tmux"
+slug = "paw-tmux"
+type = "tmux"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Minimal dark tmux status line with paw-magenta active pane and soft pastel accents."
+authors = ["NightHawk"]
+tags = ["furry", "tmux", "terminal", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/tmux/themes/paw-tmux"
+entrypoint = "paw.tmux.conf"

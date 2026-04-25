@@ -272,7 +272,7 @@ fn install(
         .map(|s| s.to_string())
         .or(detail.latest_version.clone())
         .ok_or_else(|| anyhow!("theme {slug} has no published version"))?;
-    let final_target = target.unwrap_or_else(|| resolve_target(&detail));
+    let final_target = target.unwrap_or_else(|| resolve_target(hub, &detail));
 
     if !yes {
         println!(
@@ -327,7 +327,7 @@ fn install(
     Ok(())
 }
 
-fn resolve_target(detail: &ThemeDetail) -> PathBuf {
+fn resolve_target(hub: &str, detail: &ThemeDetail) -> PathBuf {
     let raw = detail
         .manifest
         .as_ref()
@@ -335,6 +335,7 @@ fn resolve_target(detail: &ThemeDetail) -> PathBuf {
         .and_then(|i| i.get("target"))
         .and_then(|t| t.as_str())
         .map(|s| s.to_string())
+        .or_else(|| remote_default_target(hub, &detail.r#type))
         .unwrap_or_else(|| default_target_for(&detail.r#type, &detail.slug));
     let home = dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("/tmp"))
@@ -343,7 +344,34 @@ fn resolve_target(detail: &ThemeDetail) -> PathBuf {
     PathBuf::from(raw.replace("{home}", &home).replace("{slug}", &detail.slug))
 }
 
+// Ask the hub for its canonical default target for a given type. Lets the CLI
+// support new types without a recompile as long as the server exposes them.
+fn remote_default_target(hub: &str, theme_type: &str) -> Option<String> {
+    let client = anon_client().ok()?;
+    let v: serde_json::Value = client
+        .get(format!("{hub}/api/v1/categories"))
+        .send()
+        .ok()?
+        .error_for_status()
+        .ok()?
+        .json()
+        .ok()?;
+    let cats = v.get("categories")?.as_array()?;
+    let cat = cats
+        .iter()
+        .find(|c| c.get("type").and_then(|t| t.as_str()) == Some(theme_type))?;
+    let target = cat.get("defaultTarget")?.as_str()?;
+    if target.is_empty() {
+        None
+    } else {
+        Some(target.to_string())
+    }
+}
+
 fn default_target_for(theme_type: &str, slug: &str) -> String {
+    // Built-in fallback for the common types the CLI ships knowing about.
+    // Any other type falls back to a generic location so installs still work
+    // even if the hub is offline.
     match theme_type {
         "grub" => format!("/boot/grub/themes/{slug}"),
         "refind" => format!("/boot/EFI/refind/themes/{slug}"),
@@ -357,10 +385,27 @@ fn default_target_for(theme_type: &str, slug: &str) -> String {
             format!("{{home}}/.local/share/plasma/desktoptheme/{slug}")
         }
         "icon" | "cursor" => format!("{{home}}/.icons/{slug}"),
-        "wallpaper" => format!("{{home}}/Pictures/Wallpapers/{slug}"),
+        "wallpaper" | "wallpaper-animated" => {
+            format!("{{home}}/Pictures/Wallpapers/{slug}")
+        }
         "terminal" => format!("{{home}}/.config/themehub/terminal/{slug}"),
+        "alacritty" => format!("{{home}}/.config/alacritty/themes/{slug}"),
+        "kitty" => format!("{{home}}/.config/kitty/themes/{slug}"),
+        "wezterm" => format!("{{home}}/.config/wezterm/themes/{slug}"),
+        "tmux" => format!("{{home}}/.config/tmux/themes/{slug}"),
+        "neovim" => format!("{{home}}/.config/nvim/colors/{slug}"),
+        "hyprland" => format!("{{home}}/.config/hypr/themes/{slug}"),
+        "sway" => format!("{{home}}/.config/sway/themes/{slug}"),
+        "i3" => format!("{{home}}/.config/i3/themes/{slug}"),
+        "waybar" => format!("{{home}}/.config/waybar/themes/{slug}"),
+        "polybar" => format!("{{home}}/.config/polybar/themes/{slug}"),
+        "rofi" => format!("{{home}}/.config/rofi/themes/{slug}"),
+        "starship" => format!("{{home}}/.config/starship/themes/{slug}"),
+        "fastfetch" => format!("{{home}}/.config/fastfetch/{slug}"),
+        "neofetch" => format!("{{home}}/.config/neofetch/{slug}"),
         "vscode" => format!("{{home}}/.vscode/extensions/{slug}"),
         "sticker" => format!("{{home}}/Pictures/Stickers/{slug}"),
+        "streamdeck" => format!("{{home}}/Pictures/StreamDeck/{slug}"),
         _ => format!("{{home}}/.local/share/themehub/{slug}"),
     }
 }

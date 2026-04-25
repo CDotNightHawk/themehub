@@ -1,0 +1,14 @@
+[theme]
+name = "Paw mako"
+slug = "paw-mako"
+type = "mako"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "mako notification config: rounded, dark, paw-magenta border with 2s idle timeout."
+authors = ["NightHawk"]
+tags = ["furry", "mako", "notifications", "wayland"]
+nsfw = false
+
+[install]
+target = "{home}/.config/mako/themes/paw-mako"
+entrypoint = "config"

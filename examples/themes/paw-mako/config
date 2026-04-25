@@ -1,0 +1,12 @@
+background-color=#1a1720
+text-color=#f5e9f5
+border-color=#ff4fb2
+border-radius=12
+border-size=2
+padding=12
+margin=10
+default-timeout=5000
+font=Iosevka 11
+
+[urgency=critical]
+border-color=#ff6b8a

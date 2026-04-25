@@ -1,0 +1,17 @@
+/**
+ * @name Paw
+ * @author NightHawk
+ * @description Paw-magenta Discord theme
+ * @version 1.0.0
+ */
+:root {
+  --paw-bg: #1a1720;
+  --paw-accent: #ff4fb2;
+}
+.theme-dark {
+  --background-primary: var(--paw-bg);
+  --background-secondary: #16131a;
+  --background-tertiary: #13111a;
+  --brand-experiment: var(--paw-accent);
+}
+[class*="listItem"] [class*="pill"] { background-color: var(--paw-accent) !important; }

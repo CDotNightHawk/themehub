@@ -1,0 +1,16 @@
+[theme]
+name = "Paw Hyprland"
+slug = "paw-hyprland"
+type = "hyprland"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Dark, neon-magenta Hyprland config with curvy bezier animations and rounded corners. Paw-friendly."
+authors = ["NightHawk"]
+tags = ["furry", "hyprland", "dark", "neon", "ricing"]
+nsfw = false
+homepage = "https://github.com/CDotNightHawk/themehub"
+repository = "https://github.com/CDotNightHawk/themehub"
+
+[install]
+target = "{home}/.config/hypr/themes/paw-hyprland"
+entrypoint = "hyprland.conf"

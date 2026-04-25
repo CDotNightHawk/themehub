@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Paw
+Description=Rotating paw mascot
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/paw-plymouth
+ScriptFile=/usr/share/plymouth/themes/paw-plymouth/paw.script

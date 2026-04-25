@@ -1,0 +1,15 @@
+[theme]
+name = "Paw Cursor Mono"
+slug = "paw-cursor-mono"
+type = "cursor"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Tiny paw-shaped cursor (SVG source + pointer/hand variants). Drop-in replacement for default."
+authors = ["NightHawk"]
+tags = ["furry", "cursor", "dark"]
+nsfw = false
+screenshots = ["cursors/default.svg"]
+
+[install]
+target = "{home}/.icons/paw-cursor-mono"
+entrypoint = "index.theme"

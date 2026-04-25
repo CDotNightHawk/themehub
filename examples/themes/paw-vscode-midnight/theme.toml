@@ -1,0 +1,14 @@
+[theme]
+name = "Paw VS Code Midnight"
+slug = "paw-vscode-midnight"
+type = "vscode"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "VS Code dark theme: paw-magenta accents, pastel syntax, low-contrast UI chrome."
+authors = ["NightHawk"]
+tags = ["furry", "vscode", "editor", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.vscode/extensions/paw-vscode-midnight"
+entrypoint = "themes/paw-color-theme.json"

@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Obsidian"
+slug = "paw-obsidian"
+type = "obsidian"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Dark Obsidian theme with paw-magenta links, graph nodes, and soft typography."
+authors = ["NightHawk"]
+tags = ["furry", "obsidian", "notes", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/obsidian/themes/paw-obsidian"
+entrypoint = "theme.css"

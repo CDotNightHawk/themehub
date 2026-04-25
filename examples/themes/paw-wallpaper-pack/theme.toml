@@ -1,0 +1,15 @@
+[theme]
+name = "Paw Wallpapers"
+slug = "paw-wallpaper-pack"
+type = "wallpaper"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "6-piece wallpaper pack: gradient paws, topographic prints, synthwave skyline. 2560×1440 SVG sources scale to any resolution."
+authors = ["NightHawk"]
+tags = ["furry", "wallpaper", "dark", "gradient"]
+nsfw = false
+screenshots = ["wallpapers/gradient-paws.svg"]
+
+[install]
+target = "{home}/Pictures/Wallpapers/paw-wallpaper-pack"
+entrypoint = "wallpapers"

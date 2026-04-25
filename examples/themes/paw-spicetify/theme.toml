@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Spicetify"
+slug = "paw-spicetify"
+type = "spicetify"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Paw-purple Spicetify theme. Dark player with magenta play button and pastel nav."
+authors = ["NightHawk"]
+tags = ["furry", "spicetify", "spotify", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/spicetify/Themes/paw-spicetify"
+entrypoint = "user.css"

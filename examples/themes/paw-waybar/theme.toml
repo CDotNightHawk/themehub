@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Waybar"
+slug = "paw-waybar"
+type = "waybar"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Waybar config + style with paw-magenta workspace pills, rounded modules, and a tiny paw glyph."
+authors = ["NightHawk"]
+tags = ["furry", "waybar", "bar", "wayland"]
+nsfw = false
+
+[install]
+target = "{home}/.config/waybar/themes/paw-waybar"
+entrypoint = "config.jsonc"

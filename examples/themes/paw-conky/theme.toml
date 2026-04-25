@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Conky"
+slug = "paw-conky"
+type = "conky"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Transparent conky panel with paw mascot, CPU/RAM/disk bars, and network throughput."
+authors = ["NightHawk"]
+tags = ["furry", "conky", "widget", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/conky/themes/paw-conky"
+entrypoint = "conky.conf"

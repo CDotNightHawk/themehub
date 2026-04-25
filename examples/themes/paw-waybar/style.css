@@ -1,0 +1,8 @@
+* { font-family: "Iosevka", sans-serif; font-size: 13px; }
+window#waybar { background: rgba(26,23,32,0.85); color: #f5e9f5; border-bottom: 2px solid #ff4fb2; }
+#workspaces button { padding: 0 8px; color: #5b4d66; background: transparent; border-radius: 10px; margin: 4px 2px; }
+#workspaces button.active { color: #1a1720; background: #ff4fb2; }
+#clock, #cpu, #memory, #battery, #network, #pulseaudio, #tray {
+  padding: 0 10px; margin: 4px 2px; background: #2a2530; border-radius: 10px;
+}
+#battery.warning, #battery.critical { background: #ff6b8a; color: #1a1720; }

@@ -1,0 +1,11 @@
+(defwindow paw-side
+  :monitor 0
+  :geometry (geometry :x "24px" :y "24px" :width "240px" :height "420px" :anchor "top left")
+  :stacking "fg"
+  :focusable false
+  (box :class "paw" :orientation "v" :space-evenly false
+    (label :class "mascot" :text "🐾 paw")
+    (label :class "clock"  :text "${jq(format_time(EWW_TIME), \"\\(.hour):\\(.minute)\")}")
+    (label :class "mod"    :text "cpu ${round(EWW_CPU.avg,0)}%")
+    (label :class "mod"    :text "ram ${round(EWW_RAM.used_mem_perc,0)}%")
+    (label :class "mod"    :text "bat ${EWW_BATTERY.BAT0.capacity}%")))

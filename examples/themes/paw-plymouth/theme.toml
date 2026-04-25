@@ -1,0 +1,15 @@
+[theme]
+name = "Paw Plymouth"
+slug = "paw-plymouth"
+type = "plymouth"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Boot splash with a rotating paw mascot over a dark magenta gradient. 8 frames @ 24fps."
+authors = ["NightHawk"]
+tags = ["furry", "plymouth", "boot", "dark", "animation"]
+nsfw = false
+screenshots = ["frame-001.svg"]
+
+[install]
+target = "/usr/share/plymouth/themes/paw-plymouth"
+entrypoint = "paw.plymouth"

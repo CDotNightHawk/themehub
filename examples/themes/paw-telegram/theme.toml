@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Telegram"
+slug = "paw-telegram"
+type = "telegram"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Telegram Desktop theme with paw-magenta outgoing bubbles and dark bg."
+authors = ["NightHawk"]
+tags = ["furry", "telegram", "chat", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.local/share/TelegramDesktop/themes/paw-telegram"
+entrypoint = "colors.tdesktop-theme"

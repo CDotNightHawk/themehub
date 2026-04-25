@@ -1,0 +1,14 @@
+[theme]
+name = "Paw Rofi"
+slug = "paw-rofi"
+type = "rofi"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Centred Rofi launcher with rounded corners, paw-magenta selection bar, and a tiny paw prompt glyph."
+authors = ["NightHawk"]
+tags = ["furry", "rofi", "launcher", "dark"]
+nsfw = false
+
+[install]
+target = "{home}/.config/rofi/themes/paw-rofi"
+entrypoint = "paw.rasi"

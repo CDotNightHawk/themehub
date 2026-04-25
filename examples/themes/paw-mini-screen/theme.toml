@@ -1,0 +1,15 @@
+[theme]
+name = "Paw Mini-screen"
+slug = "paw-mini-screen"
+type = "mini-screen"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "Layout assets for a 3.5\" USB mini-screen: paw mascot, CPU/RAM gauges, clock."
+authors = ["NightHawk"]
+tags = ["furry", "mini-screen", "desk", "dark"]
+nsfw = false
+screenshots = ["screens/layout.svg"]
+
+[install]
+target = "{home}/Pictures/MiniScreens/paw-mini-screen"
+entrypoint = "layout.json"

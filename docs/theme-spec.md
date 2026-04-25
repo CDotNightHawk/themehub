@@ -54,28 +54,80 @@ entrypoint = "theme.txt"
 
 ### Supported `type` values
 
-| `type`           | Default install target                          |
-|------------------|-------------------------------------------------|
-| `grub`           | `/boot/grub/themes/{slug}`                      |
-| `refind`         | `/boot/EFI/refind/themes/{slug}`                |
-| `systemd-boot`   | `/boot/loader/themes/{slug}`                    |
-| `ventoy`         | `{home}/ventoy/themes/{slug}`                   |
-| `plymouth`       | `/usr/share/plymouth/themes/{slug}`             |
-| `sddm`           | `/usr/share/sddm/themes/{slug}`                 |
-| `gdm`            | `/usr/share/gnome-shell/theme/{slug}`           |
-| `gtk`            | `{home}/.themes/{slug}`                         |
-| `kde-plasma`     | `{home}/.local/share/plasma/desktoptheme/{slug}`|
-| `icon`           | `{home}/.icons/{slug}`                          |
-| `cursor`         | `{home}/.icons/{slug}` (cursor variant)         |
-| `wallpaper`      | `{home}/Pictures/Wallpapers/{slug}`             |
-| `terminal`       | `{home}/.config/themehub/terminal/{slug}`       |
-| `vscode`         | `{home}/.vscode/extensions/{slug}`              |
-| `firefox`        | n/a — installed via the manifest's `homepage`   |
-| `sticker`        | `{home}/Pictures/Stickers/{slug}`               |
-| `hardware`       | n/a — printable assets / 3D files               |
-| `other`          | `{home}/.local/share/themehub/{slug}`           |
+The authoritative list lives in [`web/src/lib/categories.ts`](../web/src/lib/categories.ts)
+and is exposed to clients at `/api/v1/categories`. Every type below is accepted
+by the manifest parser.
+
+**Boot**
+
+| `type`         | Default install target                   |
+|----------------|------------------------------------------|
+| `grub`         | `/boot/grub/themes/{slug}`               |
+| `refind`       | `/boot/EFI/refind/themes/{slug}`         |
+| `systemd-boot` | `/boot/loader/themes/{slug}`             |
+| `ventoy`       | `{home}/ventoy/themes/{slug}`            |
+| `plymouth`     | `/usr/share/plymouth/themes/{slug}`      |
+
+**Desktop & login**
+
+| `type`       | Default install target                              |
+|--------------|-----------------------------------------------------|
+| `sddm`       | `/usr/share/sddm/themes/{slug}`                     |
+| `gdm`        | `/usr/share/gnome-shell/theme/{slug}`               |
+| `lightdm`    | `/usr/share/lightdm-webkit/themes/{slug}`           |
+| `gtk`        | `{home}/.themes/{slug}`                             |
+| `kde-plasma` | `{home}/.local/share/plasma/desktoptheme/{slug}`    |
+| `xfce`       | `{home}/.themes/{slug}`                             |
+| `cinnamon`   | `{home}/.themes/{slug}`                             |
+| `mate`       | `{home}/.themes/{slug}`                             |
+
+**Window managers (ricing)**
+
+`hyprland`, `sway`, `niri`, `i3`, `bspwm`, `awesome`, `xmonad`, `openbox`,
+`river`, `dwm`, `qtile`. Default target is
+`{home}/.config/<wm>/themes/{slug}`.
+
+**Bars, launchers, notifications**
+
+`waybar`, `polybar`, `eww`, `rofi`, `wofi`, `dmenu`, `mako`, `dunst`.
+Default target is `{home}/.config/<tool>/themes/{slug}`.
+
+**Icons, cursors, wallpapers**
+
+| `type`                | Default install target                |
+|-----------------------|---------------------------------------|
+| `icon`                | `{home}/.icons/{slug}`                |
+| `cursor`              | `{home}/.icons/{slug}`                |
+| `wallpaper`           | `{home}/Pictures/Wallpapers/{slug}`   |
+| `wallpaper-animated`  | `{home}/Pictures/Wallpapers/{slug}`   |
+
+**Terminals, shells, editors**
+
+`terminal`, `alacritty`, `kitty`, `wezterm`, `foot`, `ghostty`, `tmux`,
+`neovim`, `helix`, `emacs`, `fastfetch`, `neofetch`, `starship`, `zellij`.
+Default targets live under `{home}/.config/<tool>/themes/{slug}` (see
+`categories.ts` for exact paths).
+
+**Apps**
+
+`vscode`, `jetbrains`, `sublime`, `firefox`, `chrome`, `discord`, `telegram`,
+`spicetify`, `obsidian`, `vesktop`, `obs`, `conky`. Per-app defaults.
+
+**Mini screens**
+
+`mini-screen`, `streamdeck`, `turing-smart-screen`, `aida64` — layout assets
+for external displays (3.5" USB panels, Stream Decks, AIDA64 SensorPanels).
+
+**Physical**
+
+`sticker`, `hardware`, `keycap` — print-ready SVG / PDF / STL assets.
+
+**Fallback**
+
+`other` — `{home}/.local/share/themehub/{slug}`.
 
 The CLI may override any default via `themehub install --target ...`.
+`themehub categories` prints the live list from the hub.
 
 ## Archive format
 

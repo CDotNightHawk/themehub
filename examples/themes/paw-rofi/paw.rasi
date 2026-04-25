@@ -1,0 +1,18 @@
+* {
+  bg:      #1a1720;
+  bg-alt:  #2a2530;
+  fg:      #f5e9f5;
+  accent:  #ff4fb2;
+  accent2: #b24dff;
+  muted:   #5b4d66;
+  background-color: @bg;
+  text-color: @fg;
+}
+window { border-radius: 16px; padding: 12px; width: 520px; }
+inputbar { padding: 8px 12px; spacing: 8px; background-color: @bg-alt; border-radius: 12px; }
+prompt   { text-color: @accent; }
+entry    { text-color: @fg; }
+listview { lines: 8; spacing: 4px; padding: 10px 0; }
+element { padding: 8px 12px; border-radius: 10px; }
+element selected { background-color: @accent; text-color: @bg; }
+element-icon { size: 1.2em; }

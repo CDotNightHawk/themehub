@@ -1,0 +1,14 @@
+[theme]
+name = "Paw SDDM"
+slug = "paw-sddm"
+type = "sddm"
+version = "1.0.0"
+license = "CC-BY-SA-4.0"
+description = "QML login screen theme for SDDM: blurred paw mascot, neon input field, dark gradient."
+authors = ["NightHawk"]
+tags = ["furry", "sddm", "login", "dark"]
+nsfw = false
+
+[install]
+target = "/usr/share/sddm/themes/paw-sddm"
+entrypoint = "Main.qml"
