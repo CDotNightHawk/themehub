@@ -1,0 +1,28 @@
+title-text: ""
+desktop-image: "background.png"
+desktop-color: "#06060a"
+terminal-font: "DejaVu Sans Mono Regular 14"
+terminal-left: "0"
+terminal-top: "0"
+terminal-width: "100%"
+terminal-height: "100%"
+
++ boot_menu {
+  left = 25%
+  top = 25%
+  width = 50%
+  height = 50%
+  item_color = "#e4e4e7"
+  selected_item_color = "#a78bfa"
+  item_height = 28
+  item_padding = 6
+}
+
++ label {
+  top = 92%
+  left = 0
+  width = 100%
+  align = "center"
+  text = "ventoy · paws"
+  color = "#a78bfa"
+}

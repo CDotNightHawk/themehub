@@ -1,0 +1,12 @@
+[theme]
+name = "GTK Night Paws"
+slug = "gtk-night-paws"
+type = "gtk"
+version = "0.1.1"
+license = "GPL-3.0-or-later"
+description = "A dark GTK 3/4 theme with violet accents. Pairs nicely with Furry GRUB Dark."
+authors = ["NightHawk"]
+tags = ["furry", "gtk", "dark", "gnome"]
+
+[install]
+target = "{home}/.themes/GtkNightPaws"
