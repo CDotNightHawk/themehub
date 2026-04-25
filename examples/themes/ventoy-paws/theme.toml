@@ -2,7 +2,7 @@
 name = "Ventoy Paws"
 slug = "ventoy-paws"
 type = "ventoy"
-version = "0.2.0"
+version = "0.3.0"
 license = "MIT"
 description = "Ventoy theme with subtle paw-print backdrop and a high-contrast menu."
 authors = ["NightHawk"]
