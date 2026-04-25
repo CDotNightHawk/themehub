@@ -22,7 +22,12 @@ export default function CategoriesIndex() {
               <Link key={c.type} href={`/categories/${c.type}`}>
                 <Card className="p-4 hover:border-[color:var(--accent)]/60">
                   <div className="flex items-baseline justify-between">
-                    <span className="font-medium">{c.label}</span>
+                    <span className="font-medium">
+                      <span className="mr-2" aria-hidden>
+                        {c.icon}
+                      </span>
+                      {c.label}
+                    </span>
                     <code className="text-xs text-[color:var(--muted)]">
                       {c.type}
                     </code>
