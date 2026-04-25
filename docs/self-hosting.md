@@ -17,11 +17,13 @@ This brings up:
 - `web` — the Next.js app on port `3000`
 - `postgres` — Postgres 16
 - `minio` — S3-compatible object storage on `9000` (console on `9001`)
+- `migrate` — one-shot that runs `drizzle-kit push` so the schema is ready
+- `minio-init` — one-shot that creates the `themehub` bucket on first boot
 
-The first time it starts, run migrations + seed:
+Schema migrations and bucket creation run automatically, so `docker compose up -d`
+is enough for a fresh install. Optionally load the example themes:
 
 ```bash
-docker compose exec web npm run db:push
 docker compose exec web npm run db:seed
 ```
 
@@ -66,13 +68,39 @@ npm run build
 DATABASE_URL=... AUTH_SECRET=... npm run start
 ```
 
+## GitHub OAuth (optional)
+
+To let users sign in with GitHub:
+
+1. Create a new OAuth app at
+   <https://github.com/settings/applications/new>.
+   - **Homepage URL**: your `PUBLIC_URL` (e.g. `https://themes.example.com`)
+   - **Authorization callback URL**: `<PUBLIC_URL>/api/auth/callback/github`
+     (e.g. `https://themes.example.com/api/auth/callback/github`, or
+     `http://localhost:3000/api/auth/callback/github` for local testing).
+2. Copy the client ID and generate a client secret.
+3. Set them in `.env`:
+
+   ```bash
+   GITHUB_CLIENT_ID=Iv1.abc...
+   GITHUB_CLIENT_SECRET=...
+   ```
+
+4. Restart the web service (`docker compose up -d web`).
+
+The login and register pages automatically show a "Continue with GitHub" button
+whenever `GITHUB_CLIENT_ID` is set; if it's blank, only credentials login is
+offered. OAuth users get a username auto-generated from their GitHub name on
+first sign-in.
+
 ## Going public
 
 When you're ready to expose the instance:
 
 1. Put it behind a reverse proxy (Caddy / nginx / Traefik) with HTTPS.
 2. Set `PUBLIC_URL` and `AUTH_URL` to the public origin.
-3. Configure `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` if you want OAuth.
+3. Configure `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` if you want OAuth
+   (see section above).
 4. Decide on `ALLOW_REGISTRATION` — set to `false` to make the instance
    invite-only.
 5. Mention your instance in the [public hubs list](https://github.com/CDotNightHawk/themehub/blob/main/docs/public-hubs.md)

@@ -115,6 +115,25 @@ export default async function RegisterPage({
             Create account
           </button>
         </form>
+
+        {process.env.GITHUB_CLIENT_ID && (
+          <>
+            <div className="text-center text-xs text-[color:var(--muted)]">or</div>
+            <form
+              action={async () => {
+                "use server";
+                await signIn("github", { redirectTo: "/" });
+              }}
+            >
+              <button
+                type="submit"
+                className="h-10 w-full rounded-lg border border-[color:var(--card-border)] bg-[color:var(--card)] text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5"
+              >
+                Continue with GitHub
+              </button>
+            </form>
+          </>
+        )}
       </Card>
       <p className="mt-4 text-center text-sm text-[color:var(--muted)]">
         Already have one?{" "}
