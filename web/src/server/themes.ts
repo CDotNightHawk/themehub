@@ -526,6 +526,154 @@ export async function searchTagSuggestions(prefix: string): Promise<string[]> {
   return rows.map((r) => r.tag);
 }
 
+// A flat screenshot record joined with its parent theme, for the photo wall.
+export interface PhotoCard {
+  id: string;
+  storageKey: string;
+  caption: string;
+  themeId: string;
+  themeSlug: string;
+  themeName: string;
+  themeType: string;
+  themeNsfw: boolean;
+  tags: string[];
+}
+
+export interface PhotosFilter {
+  type?: string;
+  tag?: string;
+  limit?: number;
+  offset?: number;
+  includeNsfw?: boolean;
+}
+
+// All screenshots across the hub, newest first. Joined with the parent theme
+// so we can link back to it. Only screenshots of the theme's *latest* version
+// are included, to avoid showing stale dupes.
+export async function listPhotos(f: PhotosFilter = {}): Promise<PhotoCard[]> {
+  const conds = [] as ReturnType<typeof eq>[];
+  if (f.type) conds.push(eq(themes.type, f.type));
+  if (!f.includeNsfw) conds.push(eq(themes.nsfw, false));
+
+  let themeIdsForTag: string[] | null = null;
+  if (f.tag) {
+    const rows = await db
+      .select({ id: themeTags.themeId })
+      .from(themeTags)
+      .where(eq(themeTags.tag, f.tag));
+    themeIdsForTag = rows.map((r) => r.id);
+    if (themeIdsForTag.length === 0) return [];
+    conds.push(inArray(themes.id, themeIdsForTag) as never);
+  }
+
+  const rows = await db
+    .select({
+      id: themeScreenshots.id,
+      storageKey: themeScreenshots.storageKey,
+      caption: themeScreenshots.caption,
+      versionId: themeScreenshots.versionId,
+      sortOrder: themeScreenshots.sortOrder,
+      themeId: themes.id,
+      themeSlug: themes.slug,
+      themeName: themes.name,
+      themeType: themes.type,
+      themeNsfw: themes.nsfw,
+      themeLatestVersionId: themes.latestVersionId,
+      themeUpdatedAt: themes.updatedAt,
+    })
+    .from(themeScreenshots)
+    .innerJoin(
+      themeVersions,
+      eq(themeVersions.id, themeScreenshots.versionId),
+    )
+    .innerJoin(themes, eq(themes.id, themeVersions.themeId))
+    .where(conds.length ? and(...conds) : undefined)
+    .orderBy(desc(themes.updatedAt), themeScreenshots.sortOrder)
+    .limit(Math.min(f.limit ?? 60, 200))
+    .offset(f.offset ?? 0);
+
+  const filtered = rows.filter(
+    (r) =>
+      r.themeLatestVersionId === null ||
+      r.themeLatestVersionId === r.versionId,
+  );
+  if (!filtered.length) return [];
+
+  const themeIdsList = Array.from(new Set(filtered.map((r) => r.themeId)));
+  const tagRows = await db
+    .select({ themeId: themeTags.themeId, tag: themeTags.tag })
+    .from(themeTags)
+    .where(inArray(themeTags.themeId, themeIdsList));
+  const tagsByTheme = new Map<string, string[]>();
+  for (const t of tagRows) {
+    if (!tagsByTheme.has(t.themeId)) tagsByTheme.set(t.themeId, []);
+    tagsByTheme.get(t.themeId)!.push(t.tag);
+  }
+
+  return filtered.map((r) => ({
+    id: r.id,
+    storageKey: r.storageKey,
+    caption: r.caption,
+    themeId: r.themeId,
+    themeSlug: r.themeSlug,
+    themeName: r.themeName,
+    themeType: r.themeType,
+    themeNsfw: r.themeNsfw,
+    tags: tagsByTheme.get(r.themeId) ?? [],
+  }));
+}
+
+// Add extra screenshots to an existing theme's latest version. Only the owner
+// may call this. Used by the multi-image upload form.
+export async function addScreenshots(
+  slug: string,
+  uploaderId: string,
+  files: Array<{ bytes: Buffer; contentType: string; ext: string }>,
+): Promise<number> {
+  const theme = await getThemeBySlug(slug);
+  if (!theme) throw new UploadError("NOT_FOUND", "theme not found", 404);
+  if (theme.authorId !== uploaderId) {
+    throw new UploadError(
+      "FORBIDDEN",
+      "you are not the owner of this theme",
+      403,
+    );
+  }
+  const latest = await getLatestVersion(theme.id);
+  if (!latest) {
+    throw new UploadError(
+      "INVALID_INPUT",
+      "theme has no published version yet",
+    );
+  }
+
+  const existing = await listScreenshots(latest.id);
+  let sortOrder = existing.length;
+  const storage = getStorage();
+  let added = 0;
+  for (const f of files) {
+    if (f.bytes.length === 0) continue;
+    if (f.bytes.length > 10 * 1024 * 1024) {
+      throw new UploadError("INVALID_INPUT", "image too large (10 MB max)");
+    }
+    const key = `themes/${theme.slug}/${latest.version}/screenshot-extra-${nanoid(8)}${f.ext}`;
+    await storage.put(key, f.bytes, f.contentType);
+    await db.insert(themeScreenshots).values({
+      id: nanoid(),
+      versionId: latest.id,
+      storageKey: key,
+      caption: "",
+      sortOrder: sortOrder++,
+    });
+    added++;
+  }
+  await db
+    .update(themes)
+    .set({ updatedAt: new Date() })
+    .where(eq(themes.id, theme.id));
+  return added;
+}
+
 // Convenience: bump downloads counter when an archive is fetched.
 export async function incrementDownloads(themeId: string) {
   await db
