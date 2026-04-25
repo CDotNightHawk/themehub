@@ -104,7 +104,13 @@ fn main() -> Result<()> {
             r#type,
             tag,
             limit,
-        } => search(&hub, &query.join(" "), r#type.as_deref(), tag.as_deref(), limit),
+        } => search(
+            &hub,
+            &query.join(" "),
+            r#type.as_deref(),
+            tag.as_deref(),
+            limit,
+        ),
         Cmd::Show { slug } => show(&hub, &slug),
         Cmd::Install {
             slug,
@@ -127,8 +133,7 @@ struct Config {
 
 impl Config {
     fn path() -> Result<PathBuf> {
-        let base = dirs::config_dir()
-            .ok_or_else(|| anyhow!("could not resolve config dir"))?;
+        let base = dirs::config_dir().ok_or_else(|| anyhow!("could not resolve config dir"))?;
         Ok(base.join("themehub").join("config.toml"))
     }
 
@@ -137,8 +142,7 @@ impl Config {
         if !p.exists() {
             return Ok(Self::default());
         }
-        let txt = fs::read_to_string(&p)
-            .with_context(|| format!("reading {}", p.display()))?;
+        let txt = fs::read_to_string(&p).with_context(|| format!("reading {}", p.display()))?;
         Ok(toml::from_str(&txt).unwrap_or_default())
     }
 
@@ -198,13 +202,7 @@ fn login(hub: &str, token: Option<String>, check: bool) -> Result<()> {
     Ok(())
 }
 
-fn search(
-    hub: &str,
-    q: &str,
-    type_: Option<&str>,
-    tag: Option<&str>,
-    limit: u32,
-) -> Result<()> {
+fn search(hub: &str, q: &str, type_: Option<&str>, tag: Option<&str>, limit: u32) -> Result<()> {
     let client = anon_client()?;
     let mut url = format!("{hub}/api/v1/themes?limit={limit}");
     if !q.is_empty() {
@@ -293,17 +291,14 @@ fn install(
         }
     }
 
-    let archive_url = format!(
-        "{hub}/api/v1/themes/{slug}/versions/{resolved_version}/archive"
-    );
+    let archive_url = format!("{hub}/api/v1/themes/{slug}/versions/{resolved_version}/archive");
     println!("Downloading {archive_url}");
     let mut resp = client.get(&archive_url).send()?.error_for_status()?;
     let mut bytes: Vec<u8> = Vec::new();
     resp.read_to_end(&mut bytes)?;
 
-    fs::create_dir_all(&final_target).with_context(|| {
-        format!("could not create {}", final_target.display())
-    })?;
+    fs::create_dir_all(&final_target)
+        .with_context(|| format!("could not create {}", final_target.display()))?;
     let reader = io::Cursor::new(bytes);
     let mut zip = zip::ZipArchive::new(reader)?;
     for i in 0..zip.len() {
@@ -345,9 +340,7 @@ fn resolve_target(detail: &ThemeDetail) -> PathBuf {
         .unwrap_or_else(|| PathBuf::from("/tmp"))
         .display()
         .to_string();
-    PathBuf::from(
-        raw.replace("{home}", &home).replace("{slug}", &detail.slug),
-    )
+    PathBuf::from(raw.replace("{home}", &home).replace("{slug}", &detail.slug))
 }
 
 fn default_target_for(theme_type: &str, slug: &str) -> String {
