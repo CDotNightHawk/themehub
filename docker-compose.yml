@@ -34,6 +34,25 @@ services:
       - "9000:9000"
       - "9001:9001"
 
+  # ClamAV daemon. The web service connects over TCP 3310 using the INSTREAM
+  # protocol to scan every uploaded theme archive. Signatures are refreshed
+  # automatically by freshclam inside the same image. First startup can take a
+  # minute or two while signatures download; the web service still starts and
+  # gracefully skips scans (logged as `verdict: skipped`) until clamd is ready.
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    volumes:
+      - clamav-data:/var/lib/clamav
+    healthcheck:
+      test: ["CMD-SHELL", "clamdcheck.sh || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 5m
+    ports:
+      - "3310:3310"
+
   # One-shot: create the S3 bucket the web app writes archives to.
   minio-init:
     image: minio/mc:latest
@@ -86,9 +105,16 @@ services:
       ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      # Point the upload-scan path at the bundled clamav service. Scans that
+      # fail to connect (clamd still warming up, service disabled, etc.) are
+      # logged with `verdict: skipped` and the upload is not blocked.
+      CLAMAV_HOST: ${CLAMAV_HOST:-clamav}
+      CLAMAV_PORT: ${CLAMAV_PORT:-3310}
+      CLAMAV_DISABLED: ${CLAMAV_DISABLED:-}
     ports:
       - "3000:3000"
 
 volumes:
   postgres-data:
   minio-data:
+  clamav-data:

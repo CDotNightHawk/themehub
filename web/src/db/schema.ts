@@ -25,6 +25,9 @@ export const users = pgTable("user", {
   passwordHash: text("password_hash"),
   bio: text("bio"),
   isAdmin: boolean("is_admin").notNull().default(false),
+  isBanned: boolean("is_banned").notNull().default(false),
+  banReason: text("ban_reason"),
+  bannedAt: timestamp("banned_at"),
   showNsfw: boolean("show_nsfw").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -106,6 +109,8 @@ export const themes = pgTable(
     downloads: integer("downloads").notNull().default(0),
     ratingSum: integer("rating_sum").notNull().default(0),
     ratingCount: integer("rating_count").notNull().default(0),
+    hidden: boolean("hidden").notNull().default(false),
+    hiddenReason: text("hidden_reason"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -113,6 +118,7 @@ export const themes = pgTable(
     index("theme_type_idx").on(t.type),
     index("theme_author_idx").on(t.authorId),
     index("theme_created_idx").on(t.createdAt),
+    index("theme_hidden_idx").on(t.hidden),
   ],
 );
 
@@ -240,21 +246,99 @@ export const follows = pgTable(
   (t) => [primaryKey({ columns: [t.followerId, t.followingId] })],
 );
 
-export const reports = pgTable("report", {
-  id: text("id").primaryKey(),
-  themeId: text("theme_id").references(() => themes.id, {
-    onDelete: "cascade",
-  }),
-  commentId: text("comment_id").references(() => comments.id, {
-    onDelete: "cascade",
-  }),
-  reporterId: text("reporter_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  reason: text("reason").notNull(),
-  resolved: boolean("resolved").notNull().default(false),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+export const reports = pgTable(
+  "report",
+  {
+    id: text("id").primaryKey(),
+    themeId: text("theme_id").references(() => themes.id, {
+      onDelete: "cascade",
+    }),
+    commentId: text("comment_id").references(() => comments.id, {
+      onDelete: "cascade",
+    }),
+    reporterId: text("reporter_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    reason: text("reason").notNull(),
+    category: text("category").notNull().default("other"),
+    // kept for backwards compatibility; `status` is the source of truth now.
+    resolved: boolean("resolved").notNull().default(false),
+    // open | resolved | dismissed
+    status: text("status").notNull().default("open"),
+    handledById: text("handled_by_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    handledAt: timestamp("handled_at"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    index("report_status_idx").on(t.status),
+    index("report_theme_idx").on(t.themeId),
+    index("report_comment_idx").on(t.commentId),
+  ],
+);
+
+// Admin audit trail. Every moderator action (hide, unhide, ban, unban,
+// resolve/dismiss report, delete theme/comment) writes one row here.
+export const auditLog = pgTable(
+  "audit_log",
+  {
+    id: text("id").primaryKey(),
+    actorId: text("actor_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    action: text("action").notNull(),
+    subjectType: text("subject_type").notNull(),
+    subjectId: text("subject_id"),
+    details: jsonb("details"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    index("audit_log_actor_idx").on(t.actorId),
+    index("audit_log_created_idx").on(t.createdAt),
+  ],
+);
+
+// Simple rolling-window rate limiter. `key` encodes the action and the
+// identifier (user id or ip), `windowStart` is the unix-second bucket start.
+// A unique index on (key, windowStart) means UPSERT increments the counter.
+export const rateBuckets = pgTable(
+  "rate_bucket",
+  {
+    key: text("key").notNull(),
+    windowStart: integer("window_start").notNull(),
+    count: integer("count").notNull().default(0),
+  },
+  (t) => [
+    primaryKey({ columns: [t.key, t.windowStart] }),
+    index("rate_bucket_window_idx").on(t.windowStart),
+  ],
+);
+
+// Upload-scan log: every archive ever accepted has one row with the
+// virus-scan verdict. Lets admins audit the pipeline.
+export const uploadScans = pgTable(
+  "upload_scan",
+  {
+    id: text("id").primaryKey(),
+    uploaderId: text("uploader_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    themeSlug: text("theme_slug"),
+    archiveSha256: text("archive_sha256").notNull(),
+    archiveSize: integer("archive_size").notNull(),
+    verdict: text("verdict").notNull(), // clean | infected | skipped | error
+    engine: text("engine"),
+    signature: text("signature"),
+    details: text("details"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    index("upload_scan_sha_idx").on(t.archiveSha256),
+    index("upload_scan_verdict_idx").on(t.verdict),
+    index("upload_scan_created_idx").on(t.createdAt),
+  ],
+);
 
 // ---------- Relations ----------
 

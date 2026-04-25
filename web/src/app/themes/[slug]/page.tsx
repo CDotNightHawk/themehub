@@ -8,6 +8,7 @@ import { Badge, Card, Stars } from "@/components/ui";
 import { Markdown } from "@/components/markdown";
 import { ScreenshotGallery } from "@/components/screenshot-gallery";
 import { ThemePreview } from "@/components/theme-preview";
+import { ReportDialog } from "@/components/report-dialog";
 import { getCategory } from "@/lib/categories";
 import { auth } from "@/lib/auth";
 import { CommentForm } from "./comment-form";
@@ -37,6 +38,11 @@ export default async function ThemePage({
   const detail = await getThemeDetail(slug);
   if (!detail) notFound();
   const session = await auth();
+  const viewerId = session?.user?.id ?? null;
+  const isAdmin = !!session?.user?.isAdmin;
+  const isAuthor = viewerId === detail.theme.authorId;
+  // Hidden themes are invisible to everyone except admins and the author.
+  if (detail.theme.hidden && !isAdmin && !isAuthor) notFound();
   const cat = getCategory(detail.theme.type);
   const cmts = await listComments(detail.theme.id);
   const installTarget =
@@ -51,6 +57,17 @@ export default async function ThemePage({
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8">
+      {detail.theme.hidden && (
+        <div className="mb-6 rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm">
+          <strong>This theme is hidden.</strong>{" "}
+          {detail.theme.hiddenReason
+            ? `Reason: ${detail.theme.hiddenReason}.`
+            : "A moderator hid it from public listings."}{" "}
+          {isAuthor && !isAdmin
+            ? "Only you and moderators can see it."
+            : "Only the author and moderators can see it."}
+        </div>
+      )}
       <div className="grid gap-8 lg:grid-cols-[2fr_1fr]">
         <div className="min-w-0">
           <header className="flex flex-wrap items-start justify-between gap-4">
@@ -77,6 +94,11 @@ export default async function ThemePage({
               >
                 Download archive
               </a>
+              {session?.user && !isAuthor && (
+                <ReportDialog
+                  target={{ kind: "theme", slug: detail.theme.slug }}
+                />
+              )}
             </div>
           </header>
 
@@ -192,6 +214,12 @@ export default async function ThemePage({
                       <span className="text-xs text-[color:var(--muted)]">
                         {timeAgo(c.createdAt)}
                       </span>
+                      {session?.user && c.authorId !== viewerId && (
+                        <ReportDialog
+                          target={{ kind: "comment", id: c.id }}
+                          label="report"
+                        />
+                      )}
                     </div>
                     <p className="mt-1 whitespace-pre-wrap text-sm">
                       {c.body}

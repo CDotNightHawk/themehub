@@ -24,6 +24,7 @@ declare module "next-auth" {
       id: string;
       username: string | null;
       isAdmin: boolean;
+      isBanned: boolean;
       showNsfw: boolean;
     } & DefaultSession["user"];
   }
@@ -53,6 +54,10 @@ const providers: Provider[] = [
       if (!user || !user.passwordHash) return null;
       const ok = await bcrypt.compare(password, user.passwordHash);
       if (!ok) return null;
+      // Banned users cannot sign in. Returning null here surfaces the same
+      // generic "invalid credentials" error — we don't leak that the account
+      // exists.
+      if (user.isBanned) return null;
       return {
         id: user.id,
         email: user.email!,
@@ -86,6 +91,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   },
   trustHost: true,
   callbacks: {
+    // Final gate for all providers. Banned users — including via GitHub OAuth
+    // — are refused here so the ban covers every sign-in path.
+    async signIn({ user }) {
+      if (!user?.id) return true;
+      const [u] = await db
+        .select({ isBanned: users.isBanned })
+        .from(users)
+        .where(eq(users.id, user.id))
+        .limit(1);
+      if (u?.isBanned) return false;
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.userId = user.id ?? token.sub;
@@ -104,6 +121,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       session.user.id = u.id;
       session.user.username = u.username;
       session.user.isAdmin = u.isAdmin;
+      session.user.isBanned = u.isBanned;
       session.user.showNsfw = u.showNsfw;
       session.user.name = u.name ?? u.username ?? u.email ?? "";
       session.user.email = u.email ?? "";
@@ -151,10 +169,14 @@ async function ensureUsername(
 }
 
 // Helper used by API route handlers that accept either session cookies or
-// `Authorization: Bearer <api-token>`.
+// `Authorization: Bearer <api-token>`. Banned users are rejected at this
+// layer too so CLI / API access is disabled on ban.
 export async function requireUserId(req: Request): Promise<string | null> {
   const session = await auth();
-  if (session?.user?.id) return session.user.id;
+  if (session?.user?.id) {
+    if (session.user.isBanned) return null;
+    return session.user.id;
+  }
   const authz = req.headers.get("authorization");
   if (!authz?.startsWith("Bearer ")) return null;
   const token = authz.slice("Bearer ".length).trim();
@@ -165,6 +187,12 @@ export async function requireUserId(req: Request): Promise<string | null> {
   const all = await db.select().from(apiTokens);
   for (const t of all) {
     if (await bcrypt.compare(token, t.tokenHash)) {
+      const [owner] = await db
+        .select({ isBanned: users.isBanned })
+        .from(users)
+        .where(eq(users.id, t.userId))
+        .limit(1);
+      if (owner?.isBanned) return null;
       await db
         .update(apiTokens)
         .set({ lastUsedAt: new Date() })
