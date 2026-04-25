@@ -6,6 +6,7 @@ import {
   listComments,
   UploadError,
 } from "@/server/themes";
+import { BUCKETS, identifierFromRequest, rateLimit } from "@/server/rate-limit";
 
 export async function GET(
   _req: Request,
@@ -32,6 +33,22 @@ export async function POST(
     return NextResponse.json(
       { error: { code: "UNAUTHORIZED", message: "sign in required" } },
       { status: 401 },
+    );
+  }
+  const rl = await rateLimit({
+    action: "comment",
+    identifier: identifierFromRequest(req, userId),
+    ...BUCKETS.comment,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      {
+        error: {
+          code: "RATE_LIMITED",
+          message: `too many comments; retry in ${rl.retryAfter}s`,
+        },
+      },
+      { status: 429, headers: { "retry-after": String(rl.retryAfter) } },
     );
   }
   const { slug } = await ctx.params;

@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { siteName, siteTagline } from "@/lib/utils";
 import { auth } from "@/lib/auth";
+import { countOpenReports } from "@/server/moderation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +29,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
+  const openReports = session?.user?.isAdmin ? await countOpenReports() : 0;
   return (
     <html
       lang="en"
@@ -45,6 +47,7 @@ export default async function RootLayout({
                 }
               : null
           }
+          openReports={openReports}
         />
         <main className="flex-1 w-full">{children}</main>
         <SiteFooter />

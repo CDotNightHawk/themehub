@@ -10,7 +10,13 @@ interface HeaderUser {
   isAdmin: boolean;
 }
 
-export function SiteHeader({ user }: { user: HeaderUser | null }) {
+export function SiteHeader({
+  user,
+  openReports = 0,
+}: {
+  user: HeaderUser | null;
+  openReports?: number;
+}) {
   return (
     <header className="sticky top-0 z-30 border-b border-[color:var(--card-border)] bg-[color:var(--background)]/80 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 px-4">
@@ -64,9 +70,17 @@ export function SiteHeader({ user }: { user: HeaderUser | null }) {
               {user.isAdmin && (
                 <Link
                   href="/admin"
-                  className="hidden text-xs text-[color:var(--muted)] sm:inline"
+                  className="relative hidden items-center gap-1 text-xs text-[color:var(--muted)] sm:inline-flex"
                 >
                   admin
+                  {openReports > 0 && (
+                    <span
+                      aria-label={`${openReports} open reports`}
+                      className="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-semibold leading-5 text-white"
+                    >
+                      {openReports > 99 ? "99+" : openReports}
+                    </span>
+                  )}
                 </Link>
               )}
               <form

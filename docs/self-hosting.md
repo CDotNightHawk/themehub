@@ -17,11 +17,24 @@ This brings up:
 - `web` — the Next.js app on port `3000`
 - `postgres` — Postgres 16
 - `minio` — S3-compatible object storage on `9000` (console on `9001`)
+- `clamav` — ClamAV daemon that every upload is streamed to for virus
+  scanning (port `3310`). Signatures refresh automatically via `freshclam`
+  inside the image.
 - `migrate` — one-shot that runs `drizzle-kit push` so the schema is ready
 - `minio-init` — one-shot that creates the `themehub` bucket on first boot
 
 Schema migrations and bucket creation run automatically, so `docker compose up -d`
-is enough for a fresh install. Optionally load the example themes:
+is enough for a fresh install.
+
+> **ClamAV first-start:** on a cold start, the `clamav` service needs a few
+> minutes to download virus signatures before it can accept scans. The web
+> service is still reachable in the meantime; uploads during that window
+> are recorded with `verdict: skipped` and allowed through. Once clamd is
+> ready you'll see `verdict: clean`/`infected` rows appear in
+> `/admin` → Upload scans. Set `CLAMAV_DISABLED=1` in `.env` to opt out
+> entirely.
+
+Optionally load the example themes:
 
 ```bash
 docker compose exec web npm run db:seed

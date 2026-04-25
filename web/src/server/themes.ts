@@ -17,6 +17,8 @@ import {
   type ThemeManifest,
 } from "@/db/schema";
 import { extractZip, ArchiveError } from "./archive";
+import { scanBuffer } from "./clamav";
+import { recordUploadScan } from "./moderation";
 import { compareSemver, manifestToRecord } from "@/lib/theme-spec";
 import { getStorage } from "@/lib/storage";
 import { isValidThemeType } from "@/lib/categories";
@@ -44,6 +46,19 @@ export class UploadError extends Error {
 }
 
 export async function uploadTheme(input: UploadInput): Promise<UploadResult> {
+  // Reject banned uploaders before doing any work.
+  const [uploader] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, input.uploaderId))
+    .limit(1);
+  if (!uploader) {
+    throw new UploadError("UNAUTHORIZED", "uploader does not exist", 401);
+  }
+  if (uploader.isBanned) {
+    throw new UploadError("BANNED", "account is banned from uploading", 403);
+  }
+
   let extracted;
   try {
     extracted = extractZip(input.archive);
@@ -56,6 +71,31 @@ export async function uploadTheme(input: UploadInput): Promise<UploadResult> {
   const m = extracted.manifest;
   if (!isValidThemeType(m.theme.type)) {
     throw new UploadError("INVALID_MANIFEST", `unknown type: ${m.theme.type}`);
+  }
+
+  // Virus-scan the raw archive. Infected archives are rejected outright.
+  // Unreachable scanner = "skipped" verdict so self-hosters without clamd
+  // still work; this is logged in upload_scan for audit.
+  const scan = await scanBuffer(extracted.archiveBuffer);
+  await recordUploadScan({
+    uploaderId: input.uploaderId,
+    themeSlug: m.theme.slug,
+    archiveSha256: extracted.archiveSha256,
+    archiveSize: extracted.archiveBuffer.length,
+    verdict: scan.verdict,
+    engine: "engine" in scan ? scan.engine : null,
+    signature: scan.verdict === "infected" ? scan.signature : null,
+    details:
+      scan.verdict === "skipped" || scan.verdict === "error"
+        ? scan.reason
+        : null,
+  });
+  if (scan.verdict === "infected") {
+    throw new UploadError(
+      "MALWARE_DETECTED",
+      `archive rejected: ${scan.signature}`,
+      422,
+    );
   }
 
   const storage = getStorage();
@@ -224,6 +264,9 @@ export interface ThemeListFilters {
   limit?: number;
   offset?: number;
   includeNsfw?: boolean;
+  // Include themes hidden by moderators. Defaults to false; admin/browse
+  // surfaces pass true.
+  includeHidden?: boolean;
 }
 
 export interface ThemeCard {
@@ -244,6 +287,7 @@ export async function listThemes(
   if (f.type) conds.push(eq(themes.type, f.type));
   if (f.authorId) conds.push(eq(themes.authorId, f.authorId));
   if (!f.includeNsfw) conds.push(eq(themes.nsfw, false));
+  if (!f.includeHidden) conds.push(eq(themes.hidden, false));
   if (f.q && f.q.trim()) {
     const like = `%${f.q.trim().replace(/[%_]/g, "")}%`;
     conds.push(
@@ -419,6 +463,17 @@ export async function postComment(
   if (!trimmed) throw new UploadError("INVALID_INPUT", "comment is empty");
   if (trimmed.length > 4000)
     throw new UploadError("INVALID_INPUT", "comment too long");
+  const [author] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, authorId))
+    .limit(1);
+  if (!author) {
+    throw new UploadError("UNAUTHORIZED", "not signed in", 401);
+  }
+  if (author.isBanned) {
+    throw new UploadError("BANNED", "account is banned from commenting", 403);
+  }
   await db.insert(comments).values({
     id: nanoid(),
     themeId,

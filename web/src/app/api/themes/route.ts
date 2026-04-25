@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth, requireUserId } from "@/lib/auth";
 import { uploadTheme, UploadError } from "@/server/themes";
 import { listThemes } from "@/server/themes";
+import { BUCKETS, identifierFromRequest, rateLimit } from "@/server/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -38,6 +39,26 @@ export async function POST(req: Request) {
   const userId = await requireUserId(req);
   if (!userId) {
     return errorResponse("UNAUTHORIZED", "you must be signed in", 401);
+  }
+
+  const rl = await rateLimit({
+    action: "upload",
+    identifier: identifierFromRequest(req, userId),
+    ...BUCKETS.upload,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      {
+        error: {
+          code: "RATE_LIMITED",
+          message: `too many uploads; retry in ${rl.retryAfter}s`,
+        },
+      },
+      {
+        status: 429,
+        headers: { "retry-after": String(rl.retryAfter) },
+      },
+    );
   }
 
   const ct = req.headers.get("content-type") ?? "";
